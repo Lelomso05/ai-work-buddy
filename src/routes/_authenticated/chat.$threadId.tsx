@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
@@ -40,7 +40,7 @@ const SUGGESTIONS = [
 ];
 
 function ChatThread() {
-  const { threadId } = useParamsHook();
+  const { threadId } = useParams({ from: "/_authenticated/chat/$threadId" });
   const loadMsgs = useServerFn(getThreadMessages);
 
   const { data: history = [], isLoading } = useQuery({
@@ -68,13 +68,6 @@ function ChatThread() {
   }
 
   return <ChatWindow threadId={threadId} initialMessages={initialMessages} />;
-}
-
-function useParamsHook() {
-  // Imported lazily so this file doesn't double-import in HMR
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { useParams } = require("@tanstack/react-router") as typeof import("@tanstack/react-router");
-  return useParams({ from: "/_authenticated/chat/$threadId" });
 }
 
 function ChatWindow({ threadId, initialMessages }: { threadId: string; initialMessages: UIMessage[] }) {
