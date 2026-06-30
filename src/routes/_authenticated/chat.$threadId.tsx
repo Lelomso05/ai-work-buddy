@@ -62,7 +62,7 @@ function ChatThread() {
   if (isLoading) {
     return (
       <div className="glass-card flex h-full items-center justify-center rounded-2xl">
-        <Shimmer text="Loading conversation…" />
+        <Shimmer>Loading conversation…</Shimmer>
       </div>
     );
   }
@@ -160,7 +160,7 @@ function ChatWindow({ threadId, initialMessages }: { threadId: string; initialMe
           )}
           {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
             <div className="px-2">
-              <Shimmer text="Thinking…" />
+              <Shimmer>Thinking…</Shimmer>
             </div>
           )}
           {error && (
@@ -174,12 +174,11 @@ function ChatWindow({ threadId, initialMessages }: { threadId: string; initialMe
 
       <div className="border-t border-border p-3">
         <PromptInput
-          onSubmit={(e) => {
-            const data = new FormData(e.currentTarget as HTMLFormElement);
-            const text = String(data.get("message") || "").trim();
+          onSubmit={(msg, event) => {
+            const text = msg.text.trim();
             if (!text) return;
             sendMessage({ text });
-            (e.currentTarget as HTMLFormElement).reset();
+            event.currentTarget.reset();
           }}
         >
           <PromptInputTextarea
