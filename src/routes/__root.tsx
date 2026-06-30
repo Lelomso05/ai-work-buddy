@@ -88,6 +88,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Flowdesk — AI Workplace Productivity Assistant" },
+      { name: "twitter:description", content: "Organize tasks, draft emails, summarize meetings and chat with an AI workplace assistant." },
     ],
     links: [
       { rel: "preconnect", href: "https://rsms.me" },
