@@ -1,29 +1,31 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
-    ],
-  }),
+  ssr: false,
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) navigate({ to: "/dashboard", replace: true });
+      else navigate({ to: "/auth", replace: true });
+      setChecking(false);
+    })();
+  }, [navigate]);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex items-center gap-3 text-muted-foreground">
+        <Sparkles className="h-5 w-5 animate-pulse text-primary" />
+        <span className="text-sm">{checking ? "Loading Flowdesk…" : "Redirecting…"}</span>
+      </div>
     </div>
   );
 }
